@@ -151,8 +151,8 @@ public class PortalController {
 		String token = (String) request.getSession().getAttribute("token");
 		try {
 			authClient.verifyToken(token);
-			riskClient.updateCollateralMarketValue(token);
-			LOGGER.info("Updated Current Market Value");
+			String updateCollateralMarketValue = riskClient.updateCollateralMarketValue(token);
+			LOGGER.info(updateCollateralMarketValue);
 			LOGGER.info("Ending Get all Risk");
 			return new ModelAndView("GetRiskDetails");
 		} catch (Exception e) {
@@ -176,6 +176,7 @@ public class PortalController {
 		try {
 			authClient.verifyToken(token);
 			try {
+			//	riskClient.updateCollateralMarketValue(token);
 				int riskid = Integer.parseInt(request.getParameter("riskid"));
 				DataCollateralRisk risk = riskClient.getCollateralRiskByLoanId(token, riskid);
 				mv.setViewName("DisplayRISK");

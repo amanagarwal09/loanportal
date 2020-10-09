@@ -16,6 +16,5 @@ public interface RiskClient {
 			@PathVariable int loanid);
 
 	@RequestMapping(path = "/risk/getCollateralRisk", method = RequestMethod.GET)
-	public String updateCollateralMarketValue(@RequestHeader(name = "Authorization") String token)
-			throws Exception;
+	public String updateCollateralMarketValue(@RequestHeader(name = "Authorization") String token);
 }
