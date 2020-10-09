@@ -31,7 +31,7 @@ public class CollateralMarketValue {
 	private String bankname;
 	@Column(name = "address")
 	private String address;
-	@Column(name = "rate_per_sq_ft")
+	@Column(name = "ratepersqft")
 	private double ratepersqft;
 	
 

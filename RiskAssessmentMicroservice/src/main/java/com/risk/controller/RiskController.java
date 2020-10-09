@@ -1,5 +1,7 @@
 package com.risk.controller;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +58,18 @@ public class RiskController {
 
 	@RequestMapping(path = "/risk/getCollateralRisk", method = RequestMethod.GET)
 	public ResponseEntity<?> updateCollateralMarketValue(@RequestHeader(name = "Authorization") String token)
-			throws Exception {
+		 {
 		LOGGER.info("Starting Updating Collateral Market Value");
-		String readfile = managementService.readfile();
-		LOGGER.info(readfile);
-		LOGGER.info("Ending Updating Collateral Market Value");
-		return new ResponseEntity<>(readfile, HttpStatus.OK);
+		String readfile;
+		try {
+			readfile = managementService.readfile();
+			LOGGER.info(readfile);
+			LOGGER.info("Ending Updating Collateral Market Value");
+			return new ResponseEntity<>(readfile, HttpStatus.OK);
+		} catch (IOException e) {	
+			LOGGER.info("Ending Updating Collateral Market Value");
+			return new ResponseEntity<>("Not Updated", HttpStatus.OK);
+		}
+		
 	}
 }

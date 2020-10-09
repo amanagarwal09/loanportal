@@ -116,7 +116,7 @@ public class RiskManagementServiceImpl implements RiskManagementService {
 	public String readfile() throws IOException {
 
 		LOGGER.info("Starting Read File Service");
-		File file = new File("text.txt");
+		File file = new File("src/main/resources/text.txt").getAbsoluteFile();
 		Scanner sc = new Scanner(file);
 
 		while (sc.hasNextLine()) {
@@ -138,5 +138,4 @@ public class RiskManagementServiceImpl implements RiskManagementService {
 		LOGGER.info("Ending Read File Service");
 		return "Updated";
 	}
-
 }
