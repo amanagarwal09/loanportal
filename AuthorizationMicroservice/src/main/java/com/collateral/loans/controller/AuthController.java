@@ -32,6 +32,14 @@ public class AuthController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
+	
+	@RequestMapping(path="/health",method=RequestMethod.GET)
+	public ResponseEntity<?> healthCheckup()
+	{
+		LOGGER.info("AWS Health Check ");
+		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestBody UserLoginCredential userlogincredentials) {
 		LOGGER.info("Start");

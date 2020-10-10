@@ -21,7 +21,6 @@ import com.collateral.loans.model.UserLoginCredential;
 import com.collateral.loans.service.CustomerDetailsService;
 import com.collateral.loans.service.JwtUtil;
 
-
 @SpringBootTest
 public class AuthControllerTest {
 
@@ -29,7 +28,7 @@ public class AuthControllerTest {
 	AuthController authController;
 
 	AuthResponse authResponse;
-	
+
 	UserDetails userdetails;
 
 	@Mock
@@ -41,54 +40,60 @@ public class AuthControllerTest {
 	@Mock
 	UserDAO userservice;
 
-		@Test
-		public void loginTest() {
-			
-			UserLoginCredential user = new UserLoginCredential("admin", "admin");
-			UserDetails loadUserByUsername = custdetailservice.loadUserByUsername("admin");
-			UserDetails value = new User(user.getUid(), user.getPassword(), new ArrayList<>());
-			when(custdetailservice.loadUserByUsername("admin")).thenReturn(value );
-			when(jwtutil.generateToken(loadUserByUsername)).thenReturn("token");
-			ResponseEntity<?> login = authController.login(user);
-			assertEquals(login.getStatusCodeValue(), 200);
+	@Test
+	public void loginTest() {
+
+		UserLoginCredential user = new UserLoginCredential("admin", "admin");
+		UserDetails loadUserByUsername = custdetailservice.loadUserByUsername("admin");
+		UserDetails value = new User(user.getUid(), user.getPassword(), new ArrayList<>());
+		when(custdetailservice.loadUserByUsername("admin")).thenReturn(value);
+		when(jwtutil.generateToken(loadUserByUsername)).thenReturn("token");
+		ResponseEntity<?> login = authController.login(user);
+		assertEquals(login.getStatusCodeValue(), 200);
 	}
-	
-		@Test
-		public void loginTestFailed() {
-			
-			UserLoginCredential user = new UserLoginCredential("admin", "admin");
-			UserDetails loadUserByUsername = custdetailservice.loadUserByUsername("admin");
-			UserDetails value = new User(user.getUid(), "admin11", new ArrayList<>());
-			when(custdetailservice.loadUserByUsername("admin")).thenReturn(value );
-			when(jwtutil.generateToken(loadUserByUsername)).thenReturn("token");
-			ResponseEntity<?> login = authController.login(user);
-			assertEquals(login.getStatusCodeValue(), 403);
+
+	@Test
+	public void loginTestFailed() {
+
+		UserLoginCredential user = new UserLoginCredential("admin", "admin");
+		UserDetails loadUserByUsername = custdetailservice.loadUserByUsername("admin");
+		UserDetails value = new User(user.getUid(), "admin11", new ArrayList<>());
+		when(custdetailservice.loadUserByUsername("admin")).thenReturn(value);
+		when(jwtutil.generateToken(loadUserByUsername)).thenReturn("token");
+		ResponseEntity<?> login = authController.login(user);
+		assertEquals(login.getStatusCodeValue(), 403);
 	}
-	
-	
+
 	@Test
 	public void validateTestValidtoken() {
-		
-	//	when(authController.verifyToken("token")).thenReturn(new AuthResponse("admin", "admin", true))
+
+		// when(authController.verifyToken("token")).thenReturn(new
+		// AuthResponse("admin", "admin", true))
 		when(jwtutil.validateToken("token")).thenReturn(true);
 		when(jwtutil.extractUsername("token")).thenReturn("admin");
-		UserData user1=new UserData("admin","admin","admin");
-		Optional<UserData> data =Optional.of(user1) ;
+		UserData user1 = new UserData("admin", "admin", "admin");
+		Optional<UserData> data = Optional.of(user1);
 		when(userservice.findById("admin")).thenReturn(data);
 		ResponseEntity<?> validity = authController.getValidity("bearer token");
-		assertEquals(validity.getBody().toString().contains("true"),true);
-		
-	
+		assertEquals(validity.getBody().toString().contains("true"), true);
+
 	}
+
 	@Test
 	public void validateTestInValidtoken() {
-		
-	//	when(authController.verifyToken("token")).thenReturn(new AuthResponse("admin", "admin", true))
+
+		// when(authController.verifyToken("token")).thenReturn(new
+		// AuthResponse("admin", "admin", true))
 		when(jwtutil.validateToken("token")).thenReturn(false);
 		ResponseEntity<?> validity = authController.getValidity("bearer token");
-		assertEquals(validity.getBody().toString().contains("false"),true);
-	
-	
+		assertEquals(validity.getBody().toString().contains("false"), true);
 	}
-	
+
+	@Test
+	public void testhealth() {
+		ResponseEntity<?> healthCheckup = authController.healthCheckup();
+		assertEquals(healthCheckup.getStatusCodeValue(), 200);
+		
+	}
+
 }
