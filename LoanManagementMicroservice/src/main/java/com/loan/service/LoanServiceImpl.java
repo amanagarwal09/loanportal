@@ -137,12 +137,6 @@ public class LoanServiceImpl implements LoanService {
 				loan.setCustomerloan(cloan);
 				String ret = "";
 				if (loan.getMaximumLoanEligibilityAmount() >= value) {
-
-					LOGGER.info(loanRepo.toString());
-					LOGGER.info(loanRepo.toString());
-
-					LOGGER.info("Ending Get Loan Details Service");
-
 					loanRepo.save(loan);
 					collateralManagementClient.saveCollateral(token, dataCollateralLoan);
 					LOGGER.info(loanRepo.toString());

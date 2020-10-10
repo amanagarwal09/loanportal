@@ -28,6 +28,12 @@ public class LoanManagementController {
 	LoanService loanService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoanManagementController.class);
 
+	@RequestMapping(path = "/loan/health", method = RequestMethod.GET)
+	public ResponseEntity<?> healthCheckup() {
+		LOGGER.info("AWS Health Check");
+		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+
 	@RequestMapping(path = "/loan/getLoanDetails/{loanId}", method = RequestMethod.GET)
 	public ResponseEntity<?> getLoanDetails(@RequestHeader(name = "Authorization") String token,
 			@PathVariable int loanId) {
@@ -44,7 +50,7 @@ public class LoanManagementController {
 			} catch (NoCollateralLoanFoundException e) {
 				LOGGER.info("No loan Found with this Loan Id");
 				LOGGER.info("Ending Get Loan Details");
-				return new ResponseEntity<>("Loan not Found", HttpStatus.NOT_FOUND);				
+				return new ResponseEntity<>("Loan not Found", HttpStatus.NOT_FOUND);
 			}
 		} else {
 			LOGGER.info("Token Expired Please Create New to Use");
@@ -75,7 +81,7 @@ public class LoanManagementController {
 				LOGGER.info("Ending Get Loan Details");
 				return new ResponseEntity<>("loan with this Id is Already present", HttpStatus.NOT_FOUND);
 			}
-			
+
 		} else {
 			LOGGER.info("Token Expired Please Create New to Use");
 			LOGGER.info("Ending Save Collaterals");
