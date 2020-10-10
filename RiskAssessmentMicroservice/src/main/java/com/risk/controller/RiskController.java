@@ -30,6 +30,12 @@ public class RiskController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RiskController.class);
 
+	@RequestMapping(path = "/risk/health", method = RequestMethod.GET)
+	public ResponseEntity<?> healthCheckup() {
+		LOGGER.info("AWS Health Check");
+		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+
 	@RequestMapping(path = "/risk/getCollateralRisk/{loanid}", method = RequestMethod.GET)
 	public ResponseEntity<?> getCollateralRiskByLoanId(@RequestHeader(name = "Authorization") String token,
 			@PathVariable int loanid) {
@@ -46,9 +52,9 @@ public class RiskController {
 			} catch (NoCollateralLoanFoundException e) {
 				LOGGER.info("No loan Found with this Loan Id");
 				LOGGER.info("Ending  Collateral Risk By Loan Id");
-				return new ResponseEntity<>("Loan not Found", HttpStatus.NOT_FOUND);				
+				return new ResponseEntity<>("Loan not Found", HttpStatus.NOT_FOUND);
 			}
-			
+
 		} else {
 			LOGGER.info("Token Expired Please Create new to Use");
 			LOGGER.info("Ending Collateral Risk By Loan Id");
@@ -57,8 +63,7 @@ public class RiskController {
 	}
 
 	@RequestMapping(path = "/risk/getCollateralRisk", method = RequestMethod.GET)
-	public ResponseEntity<?> updateCollateralMarketValue(@RequestHeader(name = "Authorization") String token)
-		 {
+	public ResponseEntity<?> updateCollateralMarketValue(@RequestHeader(name = "Authorization") String token) {
 		LOGGER.info("Starting Updating Collateral Market Value");
 		String readfile;
 		try {
@@ -66,10 +71,10 @@ public class RiskController {
 			LOGGER.info(readfile);
 			LOGGER.info("Ending Updating Collateral Market Value");
 			return new ResponseEntity<>(readfile, HttpStatus.OK);
-		} catch (IOException e) {	
+		} catch (IOException e) {
 			LOGGER.info("Ending Updating Collateral Market Value");
 			return new ResponseEntity<>("Not Updated", HttpStatus.OK);
 		}
-		
+
 	}
 }

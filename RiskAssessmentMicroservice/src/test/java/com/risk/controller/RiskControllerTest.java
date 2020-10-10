@@ -3,6 +3,7 @@ package com.risk.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class RiskControllerTest {
 	AuthClient authclient;
 
 	AuthResponse authResponse;
-	
+
 	DataCollateralRisk dataCollateralRisk;
 
 	@Mock
@@ -58,21 +59,36 @@ public class RiskControllerTest {
 		ResponseEntity<?> collateralRiskByLoanId = riskController.getCollateralRiskByLoanId("token", 1);
 		assertEquals(403, collateralRiskByLoanId.getStatusCodeValue());
 	}
-	
+
 	@Test
 	public void testGetLoanDetailsNotPresent() throws NoCollateralLoanFoundException {
 		authResponse = new AuthResponse("admin", "admin", true);
 		when(authclient.verifyToken("token")).thenReturn(authResponse);
 		when(riskManagementService.getCollateralRisk("token", 1)).thenThrow(NoCollateralLoanFoundException.class);
-		ResponseEntity<?> collateralRiskByLoanId = riskController.getCollateralRiskByLoanId("token", 1);	
+		ResponseEntity<?> collateralRiskByLoanId = riskController.getCollateralRiskByLoanId("token", 1);
 		assertEquals(collateralRiskByLoanId.getStatusCodeValue(), 404);
 	}
 
 	@Test
-	public void testGetCollateralByLoanIdException() throws Exception {
+	public void testUpadateMarketValue() throws Exception {
 		when(authclient.verifyToken("token")).thenReturn(new AuthResponse("admin", "admin", true));
 		when(riskManagementService.readfile()).thenReturn("Updated");
 		ResponseEntity<?> updateCollateralMarketValue = riskController.updateCollateralMarketValue("token");
 		assertEquals(updateCollateralMarketValue.getStatusCodeValue(), 200);
+	}
+
+	@Test
+	public void testUpdateMarketException() throws Exception {
+		when(authclient.verifyToken("token")).thenReturn(new AuthResponse("admin", "admin", true));
+		when(riskManagementService.readfile()).thenThrow(IOException.class);
+		ResponseEntity<?> updateCollateralMarketValue = riskController.updateCollateralMarketValue("token");
+		assertEquals(updateCollateralMarketValue.getStatusCodeValue(), 200);
+	}
+
+	@Test
+	public void testhealth() {
+		ResponseEntity<?> healthCheckup = riskController.healthCheckup();
+		assertEquals(healthCheckup.getStatusCodeValue(), 200);
+
 	}
 }
