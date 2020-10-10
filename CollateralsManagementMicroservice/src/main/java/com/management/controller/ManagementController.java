@@ -1,4 +1,4 @@
-	package com.management.controller;
+package com.management.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,12 @@ public class ManagementController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ManagementController.class);
 
+	@RequestMapping(path = "/collateral/health", method = RequestMethod.GET)
+	public ResponseEntity<?> healthCheckup() {
+		LOGGER.info("AWS Health Check");
+		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+
 	@RequestMapping(path = "/collateral/getCollaterals/{loanid}", method = RequestMethod.GET)
 	public ResponseEntity<?> getCollateralByLoanId(@RequestHeader(name = "Authorization") String token,
 			@PathVariable int loanid) {
@@ -38,7 +44,7 @@ public class ManagementController {
 		LOGGER.info(authResponse.toString());
 		if (authResponse.isValid()) {
 			try {
-				 DataCollateralLoan collateralLoan = managementService.getCollateralLoan(loanid);
+				DataCollateralLoan collateralLoan = managementService.getCollateralLoan(loanid);
 				LOGGER.info(collateralLoan.toString());
 				LOGGER.info("Ending Collateral By Loan Id");
 				return new ResponseEntity<DataCollateralLoan>(collateralLoan, HttpStatus.OK);
@@ -67,11 +73,11 @@ public class ManagementController {
 			LOGGER.info(saveCollateralLoan.toString());
 			LOGGER.info("Ending save Collateral");
 			return new ResponseEntity<>(saveCollateralLoan, HttpStatus.OK);
-	} else {
-		LOGGER.info("Token Expired Please Create new to Use");
-		LOGGER.info("Ending Get Menu Item By ID");
-		return new ResponseEntity<>("Token Expired Please Create new to Use", HttpStatus.FORBIDDEN);
-	}
+		} else {
+			LOGGER.info("Token Expired Please Create new to Use");
+			LOGGER.info("Ending Get Menu Item By ID");
+			return new ResponseEntity<>("Token Expired Please Create new to Use", HttpStatus.FORBIDDEN);
+		}
 	}
 
 }
